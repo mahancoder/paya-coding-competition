@@ -4,8 +4,6 @@
 
 using namespace std;
 
-// needs an input system that reads comma separated numbers
-
 int main(int argc, char* argv[])
 {
     int numCount;
@@ -15,8 +13,9 @@ int main(int argc, char* argv[])
 
     vector<int> numbers(numCount);
 
+    cout << "Adad ha ra vared konid: ";
+
     for (int i = 0; i < numCount; i++) {
-        cout << "Yek adad vared konid: ";
         cin >> numbers[i];
     }
 
@@ -25,8 +24,9 @@ int main(int argc, char* argv[])
     cout << "Adad haye moratab shode: " << endl;
 
     for (int num : numbers) {
-        cout << num << endl;
+        cout << num << ' ';
     }
+    cout << endl;
 
     return 0;
 }
