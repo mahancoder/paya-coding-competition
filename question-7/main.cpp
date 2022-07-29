@@ -1,35 +1,32 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-/* needs an input system that reads comma separated numbers */
-
-int main(){
-    int vectorLength;
+int main(int argc, char* argv[])
+{
+    int numCount;
 
     cout << "Tedade adad ha ra vared konid: ";
-    cin >> vectorLength;
+    cin >> numCount;
 
-    vector<int> numbers(vectorLength);
+    vector<int> numbers(numCount);
 
-    for (int i = 0; i <= vectorLength - 1; i++){
-        int newNum;
+    cout << "Adad ha ra vared konid: ";
 
-        cout << "Yek adad vared konid: ";
-        cin >> newNum;
-
-        numbers.at(i) = newNum;
+    for (int i = 0; i < numCount; i++) {
+        cin >> numbers[i];
     }
 
-    std::sort(numbers.begin(), numbers.end());
+    sort(numbers.begin(), numbers.end());
 
     cout << "Adad haye moratab shode: " << endl;
-    
-    for(int i = 0; i <= vectorLength - 1; i++){
-        cout << numbers.at(i) << endl;
+
+    for (int num : numbers) {
+        cout << num << ' ';
     }
+    cout << endl;
 
     return 0;
 }
