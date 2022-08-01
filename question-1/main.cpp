@@ -190,6 +190,7 @@ vector<int> find_emirps(vector<int>& source_primes, bool multithreaded)
 
 int main(int argc, char* argv[])
 {
+
     int N = 0;
     cout << "N ra vared konid: ";
     cin >> N;
@@ -200,7 +201,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     if (N == 1 || N == 2 || N == 3) {
-        cout << N << "-omin adad double aval " << (N < 3 ? N + 1 : 5) << " Mibashad" << endl;
+        cout << N << "-omin adad double aval " << (N < 3 ? N + 1 : 5) << " mibashad" << endl;
         return 0;
     }
 
@@ -225,6 +226,6 @@ int main(int argc, char* argv[])
         emirps.insert(emirps.end(), new_emirps.begin(), new_emirps.end());
     }
 
-    cout << N << "-omin adad double aval " << emirps[N - 1] << " Mibashad" << endl;
+    cout << N << "-omin adad double aval " << emirps[N - 1] << " mibashad" << endl;
     return 0;
 }
