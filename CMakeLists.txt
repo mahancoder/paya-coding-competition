@@ -7,12 +7,14 @@ set(QUESTION_1 question-1/main.cpp)
 set(QUESTION_1_SIMPLE question-1/simple-version.cpp)
 set(QUESTION_7 question-7/main.cpp)
 set(QUESTION_2 question-2/main.cpp)
+set(QUESTION_5 question-5/main.cpp)
 
 # Add executable targets for each question's solution
 add_executable(question-1 ${QUESTION_1})
 add_executable(question-1-simple ${QUESTION_1_SIMPLE})
 add_executable(question-2 ${QUESTION_2})
 add_executable(question-7 ${QUESTION_7})
+add_executable(question-5 ${QUESTION_5})
 
 # Find packages
 find_package(Threads REQUIRED)
@@ -20,3 +22,4 @@ find_package(Threads REQUIRED)
 # Link libraries
 target_link_libraries(question-1 Threads::Threads)
 target_link_libraries(question-1-simple Threads::Threads)
+target_link_libraries(question-5 Threads::Threads)

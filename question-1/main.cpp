@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const auto CORE_COUNT = std::thread::hardware_concurrency();
+const auto CORE_COUNT = thread::hardware_concurrency();
 
 inline bool isPrime(int num);
 inline int reverse(int num);
@@ -107,7 +107,7 @@ vector<int> primes_in_range(int start, int end, bool multithreaded)
                     }
                 }
             }
-            // Add 2 as a prime (so we can still all evens in the next loop)
+            // Add 2 as a prime (so we can skip all evens in the next loop)
             primes.insert(primes.end(), 2);
             // Add all primes (skipping even numbers, and 2 is already added) to the primes vector
             for (int i = 3; i < sieve.size(); i += 2) {
@@ -129,7 +129,7 @@ vector<int> primes_in_range(int start, int end, bool multithreaded)
             // For all the primes except 2 (even numbers are already removed)...
             for (int i = 1; i < primes_until_sqrt.size(); i++) {
                 // Remove all the multiples of this prime
-                for (int j = ceil(static_cast<double>(start) / primes_until_sqrt[i]); j <= end / primes_until_sqrt[i]; j++) {
+                for (int j = max<int>(ceil(static_cast<double>(start) / primes_until_sqrt[i]), primes_until_sqrt[i]); j <= end / primes_until_sqrt[i]; j++) {
                     sieve[(primes_until_sqrt[i] * j) - start] = false;
                 }
             }
