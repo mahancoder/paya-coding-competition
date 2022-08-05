@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/question-1-simple.dir/question-1/simple-version.cpp.o  -o question-1-simple  -lpthread 

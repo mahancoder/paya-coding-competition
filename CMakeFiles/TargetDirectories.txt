@@ -1,7 +1,0 @@
-/home/arash/paya-programming-competition/CMakeFiles/rebuild_cache.dir
-/home/arash/paya-programming-competition/CMakeFiles/edit_cache.dir
-/home/arash/paya-programming-competition/CMakeFiles/question-5.dir
-/home/arash/paya-programming-competition/CMakeFiles/question-7.dir
-/home/arash/paya-programming-competition/CMakeFiles/question-2.dir
-/home/arash/paya-programming-competition/CMakeFiles/question-1-simple.dir
-/home/arash/paya-programming-competition/CMakeFiles/question-1.dir
