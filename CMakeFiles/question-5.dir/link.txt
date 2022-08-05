@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/question-5.dir/question-5/main.cpp.o  -o question-5  -lpthread 
