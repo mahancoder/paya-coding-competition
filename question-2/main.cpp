@@ -1,30 +1,41 @@
 #include <iostream>
+#include <math.h>
+#include <string.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int reverseDigits(int num);
-
+string findSmallestPermutation(string s);
+ 
 int main()
 {
-	int num;
-	
-	cout << "Adad ra vared konid: ";
+    // take number input in string
+    string num;
+	cout << "Addad ra vared konid: ";
 	cin >> num;
 
-	num = reverseDigits(num);
+    cout << "Addade moratab shode: " << findSmallestPermutation(num) << endl;
 
-	cout << num << endl;
-
-	return 0;
+    return 0;
 }
 
-// function for reversing digits of an int
-int reverseDigits(int num)
+// return the smallest number permutation
+string findSmallestPermutation(string s)
 {
-    int rev_num = 0;
-    while (num > 0) {
-        rev_num = rev_num * 10 + num % 10;
-        num = num / 10;
-    }
-    return rev_num;
+    int len = s.length();
+ 
+    // sort the string
+    sort(s.begin(), s.end());
+ 
+    // check for leading zero in string
+    // if there are any leading zeroes,
+    // swap the first zero with first non-zero number
+    int i = 0;
+
+    while (s[i] == '0')
+        i++;
+     
+    swap(s[0], s[i]);
+
+    return s;
 }
