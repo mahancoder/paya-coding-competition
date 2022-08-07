@@ -13,4 +13,5 @@ cp question-10 ../question-10/
 cp question-8 ../question-8/
 cp question-3 ../question-3/
 cp question-4 ../question-4/
+cp question-6 ../question-6/
 cp question-11 ../question-11/
