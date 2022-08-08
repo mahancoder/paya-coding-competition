@@ -119,13 +119,17 @@ vector<int> primes_in_range(int start, int end, bool multithreaded)
     return primes;
 }
 
+// Part A
 int no_expo(int n)
 {
     vector<int> nums;
+    // Generate at least N primes
     vector<int> primes = primes_in_range(0, (log(n) + 1) * n);
     int smallest_prime = primes[0];
     int next_smallest = primes[1];
+    // Multiply the smallest prime by its next smallest prime and then go to the next prime
     for (int i = 0; i < primes.size(); i++) {
+        // Until the result is bigger than the last prime
         if (primes[i] * primes[i + 1] > primes.back())
             break;
         for (int j = i + 1; j < primes.size(); j++) {
@@ -135,34 +139,55 @@ int no_expo(int n)
                 break;
         }
     }
+    // Insert the primes into the results
     nums.insert(nums.end(), primes.begin(), primes.end());
+    // Sort them
     sort(nums.begin(), nums.end());
     return nums[n - 1];
 }
 
+// Part B
 int lot_expo(int n)
 {
-    int lot_count = 1;
-    int no_count = 0;
-    for (int i = 2; i < n; i++)
-    {
-        bool lot = true;
-        bool no = true;
-        for(auto d : prime_factors(i))
-        {
-            if (d.second < 2)
-            {
-                lot = false;
-            }
-            if (d.second > 1)
-            {
-                no = false;
+    int limit = pow(n, 2);
+    vector<bool> sieve(n + 1, true);
+    vector<long int> nums;
+    // Generate the power of numbers from 2-n that are smaller than limit
+    for (int i = 2; i < sieve.size(); i++) {
+        if (sieve[i]) {
+            int expo = 2;
+            long int power = pow(i, expo);
+            while (power <= limit) {
+                nums.insert(nums.end(), power);
+                if (power <= n) {
+                    sieve[power] = false;
+                }
+                expo++;
+                power = pow(i, expo);
             }
         }
-        lot_count += lot;
-        no_count += no;
     }
-    cout << lot_count << " lots and " << no_count << " no" << endl;
+    // 1 is also powerful
+    nums.insert(nums.end(), 1);
+    sort(nums.begin(), nums.end());
+    // Multiply the powers by other powers until the result is bigger than limit
+    for (int i = 1; i < nums.size(); i++) {
+        if (nums[i] * nums[i + 1] > limit) {
+            break;
+        } else {
+            for (int j = i + 1; j < nums.size(); j++) {
+                long int res = nums[i] * nums[j];
+                if (res > limit) {
+                    break;
+                } else if (find(nums.begin(), nums.end(), res) == nums.end()) {
+                    nums.insert(nums.end(), res);
+                }
+            }
+        }
+    }
+    // Sort them
+    sort(nums.begin(), nums.end());
+    return nums[n - 1];
 }
 
 int main(int argc, char* argv[])
