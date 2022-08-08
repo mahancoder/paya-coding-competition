@@ -4,6 +4,7 @@
 #include <math.h>
 #include <thread>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 
@@ -18,6 +19,8 @@ vector<int> primes_in_range(int start, int end, bool multithreaded = true);
 // A global vector of primes, so that we don't have to regenerate primes every time we use some functions
 vector<int> check_primes;
 
+bool multithread_enable = true;
+
 inline bool isPrime(int num)
 {
     if (num == 1) {
@@ -29,7 +32,7 @@ inline bool isPrime(int num)
     // If primes list is not passed to the function, generate them
     int num_sqrt = sqrt(num);
     if (check_primes.size() == 0 || check_primes.back() < num_sqrt) {
-        check_primes = primes_in_range(0, num_sqrt);
+        check_primes = primes_in_range(0, num_sqrt, multithread_enable);
     }
     for (int i = 0; i < check_primes.size(); i++) {
         // Stop when we reach the square root of number
@@ -125,7 +128,7 @@ vector<int> primes_in_range(int start, int end, bool multithreaded)
                 sieve[i] = false;
             }
             // Calculate primes before sqrt(end)
-            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end));
+            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end), multithreaded);
             // For all the primes except 2 (even numbers are already removed)...
             for (int i = 1; i < primes_until_sqrt.size(); i++) {
                 // Remove all the multiples of this prime
@@ -190,6 +193,10 @@ vector<int> find_emirps(vector<int>& source_primes, bool multithreaded)
 
 int main(int argc, char* argv[])
 {
+    if (argc > 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
 
     int N = 0;
     cout << "N ra vared konid: ";
@@ -212,17 +219,17 @@ int main(int argc, char* argv[])
     int limit = (log(primesN) + 1) * primesN;
 
     // Generate primes upto limit
-    vector<int> primes = primes_in_range(0, limit);
+    vector<int> primes = primes_in_range(0, limit, multithread_enable);
     // Set the global primes
     check_primes = primes;
     // Find the emirps inside primes
-    vector<int> emirps = find_emirps(primes);
+    vector<int> emirps = find_emirps(primes, multithread_enable);
 
     // If we still don't have enough emirps, generate from limit + 1 to 2 * limit
     // and then from 2 * limit to 3 * limit and so on until we have N emirps
     for (float i = 1; emirps.size() < N; i += 0.1) {
-        primes = primes_in_range(limit * i + 1, limit * (i + 0.1));
-        auto new_emirps = find_emirps(primes);
+        primes = primes_in_range(limit * i + 1, limit * (i + 0.1), multithread_enable);
+        auto new_emirps = find_emirps(primes, multithread_enable);
         emirps.insert(emirps.end(), new_emirps.begin(), new_emirps.end());
     }
 

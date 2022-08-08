@@ -5,6 +5,7 @@
 #include <numeric>
 #include <thread>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 
@@ -95,7 +96,7 @@ vector<int> primes_in_range(int start, int end, bool multithreaded, bool count)
                 sieve[i] = false;
             }
             // Calculate primes before sqrt(end)
-            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end) + 1);
+            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end) + 1, multithreaded);
             // For all the primes except 2 (even numbers are already removed)...
             for (int i = 1; i < primes_until_sqrt.size(); i++) {
                 // Remove all the multiples of this prime
@@ -119,6 +120,11 @@ vector<int> primes_in_range(int start, int end, bool multithreaded, bool count)
 }
 int main(int argc, char* argv[])
 {
+    bool multithread_enable = true;
+    if (argc > 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
     int line_count;
     cout << "q ra vared konid: ";
     cin >> line_count;
@@ -134,7 +140,7 @@ int main(int argc, char* argv[])
     }
     // Calculate each line's primes
     for (auto pair : start_end_pairs) {
-        cout << "Tedad adad aval bein " << pair[0] << " va " << pair[1] << ": " << primes_in_range(pair[0], pair[1], true, true)[0] << endl;
+        cout << "Tedad adad aval bein " << pair[0] << " va " << pair[1] << ": " << primes_in_range(pair[0], pair[1], multithread_enable, true)[0] << endl;
     }
     return 0;
 }

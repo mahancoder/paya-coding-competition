@@ -6,6 +6,7 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 
@@ -13,23 +14,7 @@ const auto CORE_COUNT = thread::hardware_concurrency();
 
 vector<int> primes_in_range(int start, int end, bool multithreaded = true);
 
-// {num: exponent}
-unordered_map<int, int> prime_factors(int n)
-{
-    unordered_map<int, int> map;
-    int factor = 2;
-    while (n > 1) {
-        if (n % factor == 0) {
-            if (map.find(factor) != map.end())
-                map[factor]++;
-            else
-                map[factor] = 1;
-            n /= factor;
-        } else
-            factor++;
-    }
-    return map;
-}
+bool multithread_enable = true;
 
 // Find all the primes from start to end (containing both start and end if they are prime)
 vector<int> primes_in_range(int start, int end, bool multithreaded)
@@ -98,7 +83,7 @@ vector<int> primes_in_range(int start, int end, bool multithreaded)
                 sieve[i] = false;
             }
             // Calculate primes before sqrt(end)
-            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end));
+            vector<int> primes_until_sqrt = primes_in_range(0, sqrt(end), multithreaded);
             // For all the primes except 2 (even numbers are already removed)...
             for (int i = 1; i < primes_until_sqrt.size(); i++) {
                 // Remove all the multiples of this prime
@@ -124,7 +109,7 @@ int no_expo(int n)
 {
     vector<int> nums;
     // Generate at least N primes
-    vector<int> primes = primes_in_range(0, (log(n) + 1) * n);
+    vector<int> primes = primes_in_range(0, (log(n) + 1) * n, multithread_enable);
     int smallest_prime = primes[0];
     int next_smallest = primes[1];
     // Multiply the smallest prime by its next smallest prime and then go to the next prime
@@ -192,6 +177,10 @@ int lot_expo(int n)
 
 int main(int argc, char* argv[])
 {
+    if (argc > 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
     int n;
     cout << "n ra vared konid: ";
     cin >> n;

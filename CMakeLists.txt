@@ -33,6 +33,5 @@ find_package(Threads REQUIRED)
 
 # Link libraries
 target_link_libraries(question-1 Threads::Threads)
-target_link_libraries(question-1-simple Threads::Threads)
 target_link_libraries(question-5 Threads::Threads)
 target_link_libraries(question-4 Threads::Threads)
