@@ -14,6 +14,7 @@ set(QUESTION_3 question-3/main.cpp)
 set(QUESTION_4 question-4/main.cpp)
 set(QUESTION_11 question-11/main.cpp)
 set(QUESTION_6 question-6/main.cpp)
+set(QUESTION_9 question-9/main.cpp)
 
 # Add executable targets for each question's solution
 add_executable(question-1 ${QUESTION_1})
@@ -26,7 +27,8 @@ add_executable(question-8 ${QUESTION_8})
 add_executable(question-3 ${QUESTION_3})
 add_executable(question-4 ${QUESTION_4})
 add_executable(question-11 ${QUESTION_11})
-add_executable(question-6 ${QUESTION_11})
+add_executable(question-6 ${QUESTION_6})
+add_executable(question-9 ${QUESTION_9})
 
 # Find packages
 find_package(Threads REQUIRED)

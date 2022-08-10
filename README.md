@@ -2,7 +2,7 @@
 Answers for Paya League Comp Sci final round (2022 - 1401)
 
 ## Usage
-First, build the apps from source, and then run your desired executable in /build directory.
+First, build the apps from source, and then run your desired executable in a question's directory.
 
 ## Building from source
 To build from source, run build.sh:
