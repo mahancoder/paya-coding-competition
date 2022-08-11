@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     {
         poly += ("(x - " + to_string(root) + ") * ");
     }
-    // Replace (x - 0) withjust x
+    // Replace (x - 0) with just x
     if (poly.find("(x - 0)") != string::npos)
     {
         poly.replace(poly.find("(x - 0)"), 7, "x");
