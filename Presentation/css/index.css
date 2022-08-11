@@ -49,6 +49,9 @@ h5 {
     color: rgb(253, 43, 43);
 }
 
+pre {
+    direction: ltr;
+}
 code {
     direction: ltr;
     font-family: monospace;
@@ -56,11 +59,13 @@ code {
     padding: 5px;
     box-sizing: border-box;
     width: 100%;
+    page-break-after: always;
 }
 .hljs {
     white-space: pre-wrap;
     background-color: rgb(245, 245, 245) !important;
     border-radius: 20px;
+    direction: ltr !important;
 }
 
 .desc-heading {

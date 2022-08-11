@@ -294,6 +294,8 @@ int main(int argc, char* argv[])
         </ul>
         </p>
     </section>
+
+    <!-- Page 3 -->
     <section class="page page-3">
         <h2 class="page-heading">سوال ۲:</h2>
         <pre>
@@ -451,7 +453,36 @@ int main(int argc, char* argv[])
         </ul>
         </p>
     </section>
-    <div style="page-break-after: always;"></div>
+
+    <!-- Page 4 -->
+    <section class="page page-4">
+        <h2 class="page-heading">سوال ۳:</h2>
+            <pre>
+                <code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+    int years, increase_percentage;
+    cout &lt;&lt; "Tedad sal va darsad afzayesh hoghoogh ra vared konid: ";
+    cin &gt;&gt; years &gt;&gt; increase_percentage;
+    // Formula: (((present / past) ^ 1 / years) - 1) * 100
+    cout &lt;&lt; "Miangin darsad afzayesh saliane: " &lt;&lt; ceil((pow((100 + increase_percentage) / 100.0, 1.0 / years) - 1.0) * 100) &lt;&lt; endl;
+    return 0;
+}</code>
+            </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+            <ul class="algo-list">
+                <li>
+                    برای به دست آوردن میانگین درصد افزایش سالیانه کافی است از فرمول زیر استفاده کنیم:
+                    \[Avg = \left[\left(\frac{100 + increase\_percentage}{100}\right)^\frac{1}{years} - 1\right] \times 100 \]
+                </li>
+            </ul>
+        </p>
+    </section>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
