@@ -1,0 +1,81 @@
+html {
+    direction: rtl;
+    margin: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2.5em;
+}
+
+h3 {
+    font-size: 2em;
+}
+
+h4 {
+    font-size: 1.5em;
+}
+
+h5 {
+    font-size: 1em;
+}
+
+.page {
+    padding: 0cm;
+    direction: rtl;
+}
+
+.page-heading {
+    color: rgb(253, 43, 43);
+}
+
+code {
+    direction: ltr;
+    font-family: monospace;
+    font-size: 1.2em;
+    padding: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.hljs {
+    white-space: pre-wrap;
+    background-color: rgb(245, 245, 245) !important;
+    border-radius: 20px;
+}
+
+.desc-heading {
+    color: royalblue;
+    margin-right: 40px;
+}
+
+.algo-list {
+    background-color: rgb(255, 236, 212);
+    border-radius: 10px;
+    line-height: 3.7vh;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+.algo-list li {
+    font-size: 1.2em;
+    margin-top: 3vh;
+}
+.algo-list li:first-child {
+    margin-top: 0px !important;
+}
+.algo-list li:last-child {
+    margin-bottom: 0px !important;
+}
+
+.algo-list li::marker {
+    color:red;
+}

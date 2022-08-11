@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paya League Answers - Final Round</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-light.min.css">
+</head>
+
+<body>
+    <!-- Page 1 -->
+    <section class="page page-1">
+        <div class="center">
+            <h3>به نام خدا</h3>
+            <h1>پاسخ سوالات لیگ علمی پایا</h1>
+            <h2>مرحله نهایی</h2>
+            <h3>سال تحصیلی ۱۴۰۰ - ۱۴۰۱</h3>
+            <h3>اعضای تیم: ماهان لامعی، علی آتش روز، امیرمحمد غضنفری، طاها تعصب</h3>
+        </div>
+    </section>
+
+    <div style="page-break-after: always;"></div>
+
+    <!-- Page 2 -->
+    <section class="page page-2">
+        <h2 class="page-heading">سوال ۱:</h2>
+        <pre>
+        <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;future&gt;
+#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+#include &lt;string.h&gt;
+
+using namespace std;
+
+const auto CORE_COUNT = thread::hardware_concurrency();
+
+inline bool isPrime(int num);
+inline int reverse(int num);
+inline bool isEmirp(int num);
+vector&lt;int&gt; find_emirps(vector&lt;int&gt;&amp; source_primes, bool multithreaded = true);
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded = true);
+
+// A global vector of primes, so that we don't have to regenerate primes every time we use some functions
+vector&lt;int&gt; check_primes;
+
+bool multithread_enable = true;
+
+inline bool isPrime(int num)
+{
+    if (num == 1) {
+        return false;
+    }
+    if (num &lt; 4) {
+        return true;
+    }
+    // If primes list is not passed to the function, generate them
+    int num_sqrt = sqrt(num);
+    if (check_primes.size() == 0 || check_primes.back() &lt; num_sqrt) {
+        check_primes = primes_in_range(0, num_sqrt, multithread_enable);
+    }
+    for (int i = 0; i &lt; check_primes.size(); i++) {
+        // Stop when we reach the square root of number
+        if (check_primes[i] &gt; num_sqrt)
+            break;
+        if (num % check_primes[i] == 0)
+            return false;
+    }
+    return true;
+}
+// Reverses a number, eg. 586 --&gt; 685
+inline int reverse(int num)
+{
+    int remainder = 0, reversed_number = 0;
+    while (num != 0) {
+        remainder = num % 10;
+        reversed_number = reversed_number * 10 + remainder;
+        num /= 10;
+    }
+    return reversed_number;
+}
+
+inline bool isEmirp(int num)
+{
+    return isPrime(reverse(num));
+}
+// Find all the primes from start to end (containing both start and end if they are prime)
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded)
+{
+    vector&lt;int&gt; primes;
+    // Do multi-threading if its worth it
+    if (multithreaded &amp;&amp; end - start &gt; 1000) {
+        int count = end - start + 1;
+        vector&lt;future&lt;vector&lt;    padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;reads don't respect order
+        sort(primes.begin(), primes.end());
+
+    } else {
+        // If we are doing classical sieve (starting from 0)
+        if (start &lt;= 2) {
+            // The sieve bool array
+            vector&lt;bool&gt; sieve(end + 1, true);
+            // Remove even numbers except 2
+            for (int i = 4; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Remove multiples of 3 except 3 itself
+            for (int i = 9; i &lt; sieve.size(); i += 6) {
+                sieve[i] = false;
+            }
+            // 0 and 1 are not prime
+            sieve[0] = sieve[1] = false;
+            // For each odd number less than sqrt(end) starting from 5 (2 and 3 are already done)...
+            for (int i = 5; i &lt;= sqrt(end); i += 2) {
+                // If i is prime
+                if (sieve[i]) {
+                    // Start from i^2 and remove all multiples of i (auto skipping even numbers)
+                    for (int j = pow&lt;int, int&gt;(i, 2); j &lt; sieve.size(); j += i * 2) {
+                        sieve[j] = false;
+                    }
+                }
+            }
+            // Add 2 as a prime (so we can skip all evens in the next loop)
+            primes.insert(primes.end(), 2);
+            // Add all primes (skipping even numbers, and 2 is already added) to the primes vector
+            for (int i = 3; i &lt; sieve.size(); i += 2) {
+                if (sieve[i]) {
+                    primes.insert(primes.end(), i);
+                }
+            }
+        } else {
+            // Segmented sieve
+            int count = end - start + 1;
+            // The sieve array (offset by start, meaning sieve[0] is the start and sieve.back() is the end)
+            vector&lt;bool&gt; sieve(count, true);
+            // Remove even numbers
+            for (int i = start % 2; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Calculate primes before sqrt(end)
+            vector&lt;int&gt; primes_until_sqrt = primes_in_range(0, sqrt(end), multithreaded);
+            // For all the primes except 2 (even numbers are already removed)...
+            for (int i = 1; i &lt; primes_until_sqrt.size(); i++) {
+                // Remove all the multiples of this prime
+                for (int j = max&lt;int&gt;(ceil(static_cast&lt;double&gt;(start) / primes_until_sqrt[i]), primes_until_sqrt[i]); j &lt;= end / primes_until_sqrt[i]; j++) {
+                    sieve[(primes_until_sqrt[i] * j) - start] = false;
+                }
+            }
+            // Add all the primes (auto skipping evens)
+            for (int i = !(start % 2); i &lt; sieve.size(); i += 2) {
+                if (sieve[i]) {
+                    primes.insert(primes.end(), i + start);
+                }
+            }
+        }
+    }
+    // Primes array now has all the primes from start and end
+    return primes;
+}
+
+vector&lt;int&gt; find_emirps(vector&lt;int&gt;&amp; source_primes, bool multithreaded)
+{
+    vector&lt;int&gt; emirps;
+    // If the vector is worth multi-threading
+    if (multithreaded &amp;&amp; source_primes.size() &gt; 100) {
+        // Futures vector
+        vector&lt;future&lt;vector&lt;int&gt;&gt;&gt; futures;
+        // Keep a reference of subdivision vectors on the heap
+        vector&lt;vector&lt;int&gt;*&gt; subdivisions;
+        // Number of elments in each segment, segments smaller than 100 are not worth it
+        int division_size = max&lt;int&gt;(100, source_primes.size() / CORE_COUNT);
+        // Create the prime numbers segment and start the threads
+        for (int start_index = 0; start_index &lt; source_primes.size(); start_index++) {
+            // Each range starts from i to 1 less than the next segment
+            int end_index = min&lt;int&gt;(source_primes.size() - 1, start_index + division_size - 1);
+            vector&lt;int&gt;* subdivision = new vector&lt;int&gt;(source_primes.begin() + start_index, source_primes.begin() + end_index + 1);
+            subdivisions.insert(subdivisions.end(), subdivision);
+            start_index = end_index;
+            futures.insert(futures.end(), async(find_emirps, ref(*subdivision), false));
+        }
+        // Get thread results
+        for (auto&amp; f : futures) {
+            auto result = f.get();
+            emirps.insert(emirps.end(), result.begin(), result.end());
+        }
+        // Delete subdivision vectors from the heap
+        for (auto sub : subdivisions) {
+            delete sub;
+        }
+        // Sort the array, since threads do not work by order
+        sort(emirps.begin(), emirps.end());
+    } else {
+
+        // Check for all emirps inside an array of primes
+        for (int prime : source_primes) {
+            if (isEmirp(prime)) {
+                emirps.insert(emirps.end(), prime);
+            }
+        }
+    }
+    return emirps;
+}
+
+int main(int argc, char* argv[])
+{
+    if (argc &gt; 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
+
+    int N = 0;
+    cout &lt;&lt; "N ra vared konid: ";
+    cin &gt;&gt; N;
+
+    // Value gaurds
+    if (N &lt; 1) {
+        cout &lt;&lt; "N na motabar!" &lt;&lt; endl;
+        return -1;
+    }
+    if (N == 1 || N == 2 || N == 3) {
+        cout &lt;&lt; N &lt;&lt; "-omin adad double aval " &lt;&lt; (N &lt; 3 ? N + 1 : 5) &lt;&lt; " mibashad" &lt;&lt; endl;
+        return 0;
+    }
+
+    // Approximately how many primes we need to find to get N emirps
+    int primesN = N * log10(N);
+
+    // Approximately, we need to find primes less than this to get N emirps
+    int limit = (log(primesN) + 1) * primesN;
+
+    // Generate primes upto limit
+    vector&lt;int&gt; primes = primes_in_range(0, limit, multithread_enable);
+    // Set the global primes
+    check_primes = primes;
+    // Find the emirps inside primes
+    vector&lt;int&gt; emirps = find_emirps(primes, multithread_enable);
+
+    // If we still don't have enough emirps, generate from limit + 1 to 2 * limit
+    // and then from 2 * limit to 3 * limit and so on until we have N emirps
+    for (float i = 1; emirps.size() &lt; N; i += 0.1) {
+        primes = primes_in_range(limit * i + 1, limit * (i + 0.1), multithread_enable);
+        auto new_emirps = find_emirps(primes, multithread_enable);
+        emirps.insert(emirps.end(), new_emirps.begin(), new_emirps.end());
+    }
+
+    cout &lt;&lt; N &lt;&lt; "-omin adad double aval " &lt;&lt; emirps[N - 1] &lt;&lt; " mibashad" &lt;&lt; endl;
+    return 0;
+}</code>
+    </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+        <ul class="algo-list">
+            <li>
+                برای پیدا کردن N امین عدد دوبل اول، باید تقریبا \(N \times \log_{10}(N)\) عدد اول پیدا کنیم. همچنین برای پیدا کردن X
+                عدد
+                اول، باید تمام اعداد اول از صفر تا تقریبا \((\log_e(X) + 1) \times X\) را پیدا کنیم.
+            </li>
+            <li>
+                برای پیدا کردن اعداد اول بین 0 و N میتوانیم از الگوریتم غربال اراتوستن استفاده کنیم. در این الگوریتم ما
+                تمام
+                مضرب های هر عدد اول تا رادیکال N را حذف کرده و چیزی که باقی می ماند، اعداد اول است.
+            </li>
+            <li>
+                سپس، هر کدام از آن اعداد اول را امتحان میکنیم و چک میکنیم که آیا برعسشان نیز اول هست یا نه. برای چک کردن
+                اول
+                بودن عدد نیز، کافی است تمام اعداد اول تا رادیکال آن عدد را با غربال پیدا کرده و اگر عدد بر هیچ کدام از
+                آنها
+                بخش پذیر نبود، اول است.
+            </li>
+            <li>
+                از آنجایی که این دو فرمول تقریبی هستند، ممکن است ما در نهایت به تعداد کافی عدد دوبل اول نداشته باشیم. به
+                همین خاطر، اگر که تعداد اعداد پیدا شده کافی نبود، الگوریتم اعداد دوبل اول بین N و 1.1 * N را پیدا میکند.
+                این
+                کار را تا جایی انجام می دهیم تا به تعداد کافی عدد پیدا کرده باشیم.
+            </li>
+            <li>
+                همچنین، الگوریتم برای بهینه تر بودن، از تمام هسته های پردازنده استفاده کرده و با تقسیم کار، محاسبه را
+                سریعتر
+                انجام میدهد. برای تقسیم کردن کار به بخش های کوچکتر، لازم است الگوریتم غربال ما بتواند اعداد اول بین دو
+                عدد،
+                با شروع غیر از 0 را نیز محاسبه کند. برای این کار کافی است الگوریتم را کمی تغییر دهیم تا تمام مضرب های
+                اعداد
+                اول بین 0 و نقطه پایان که بزرگتر از نقطه شروع هستند، را حذف کند.
+            </li>
+            <li>
+                همچنین برای جلوگیری از محسابه مجدد اعداد اول برای مراحل مختلف، پس از محاسبه اعداد اول، آنها را در یک
+                متغیر
+                عمومی برای استفاده های بعدی ذخیره میکنیم.
+        </ul>
+        </p>
+    </section>
+    <div style="page-break-after: always;"></div>
+    <section class="page page-3">
+        <h2 class="page-heading">سوال ۲:</h2>
+    </section>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+
+</html>
