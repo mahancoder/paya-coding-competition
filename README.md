@@ -11,4 +11,6 @@ To build from source, run build.sh:
 ```
 
 ## File structure
-Every question-x folder contains a full app with separate main functions, along with It's binary. **build.sh** compiles all apps into separate executables using CMake configurations in CMakeLists.txt and then copies all of them into their own directory (e.g. question 1's binary located in /build will be copied to ../question-1, or simply It's subdirectory's question-1 directory)
+You can find competition's questions PDF source in **Exam-Questions.pdf**
+
+Every question-x folder contains a full answer with separate main functions, along with binaries to It's question. **build.sh** compiles all apps (answers) into separate executables using CMake configurations in CMakeLists.txt and then copies all of them into their own directory (e.g. question 1's binary located in /build will be copied to ../question-1, or simply It's subdirectory's question-1 directory)
