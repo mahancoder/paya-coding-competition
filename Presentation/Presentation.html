@@ -457,7 +457,7 @@ int main(int argc, char* argv[])
     <!-- Page 4 -->
     <section class="page page-4">
         <h2 class="page-heading">سوال ۳:</h2>
-            <pre>
+        <pre>
                 <code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;math.h&gt;
 
@@ -475,12 +475,275 @@ int main(int argc, char* argv[])
             </pre>
         <h3 class="desc-heading">الگوریتم</h3>
         <p class="desc">
-            <ul class="algo-list">
-                <li>
-                    برای به دست آوردن میانگین درصد افزایش سالیانه کافی است از فرمول زیر استفاده کنیم:
-                    \[Avg = \left[\left(\frac{100 + increase\_percentage}{100}\right)^\frac{1}{years} - 1\right] \times 100 \]
-                </li>
-            </ul>
+        <ul class="algo-list">
+            <li>
+                برای به دست آوردن میانگین درصد افزایش سالیانه کافی است از فرمول زیر استفاده کنیم:
+                \[Avg = \left[\left(\frac{100 + increase\_percentage}{100}\right)^\frac{1}{years} - 1\right] \times 100
+                \]
+            </li>
+        </ul>
+        </p>
+    </section>
+    <section class="page page-5">
+        <h2 class="page-heading">سوال ۴:</h2>
+        <pre>
+                <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;future&gt;
+#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;numeric&gt;
+#include &lt;thread&gt;
+#include &lt;unordered_map&gt;
+#include &lt;vector&gt;
+#include &lt;string.h&gt;
+
+using namespace std;
+
+const auto CORE_COUNT = thread::hardware_concurrency();
+
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded = true);
+
+bool multithread_enable = true;
+
+// Find all the primes from start to end (containing both start and end if they are prime)
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded)
+{
+    vector&lt;int&gt; primes;
+    // Do multi-threading if its worth it
+    if (multithreaded &amp;&amp; end - start &gt; 1000) {
+        int count = end - start + 1;
+        vector&lt;future&lt;vector&lt;int&gt;&gt;&gt; futures;
+        // Division size minimum is 100
+        int division_size = max&lt;int&gt;(100, count / CORE_COUNT);
+        // Start the different threads, calculating different divisions of primes
+        for (int s = start; s &lt;= end; s++) {
+            int e = min&lt;int&gt;(s + division_size, end);
+            futures.insert(futures.end(), async(primes_in_range, s, e, false));
+            s = e;
+        }
+        // Get the thread results and append them to the list of primes
+        for (auto&amp; f : futures) {
+            auto result = f.get();
+            primes.insert(primes.end(), result.begin(), result.end());
+        }
+        // Sort the primes because threads don't respect order
+        sort(primes.begin(), primes.end());
+
+    } else {
+        // If we are doing classical sieve (starting from 0)
+        if (start &lt;= 2) {
+            // The sieve bool array
+            vector&lt;bool&gt; sieve(end + 1, true);
+            // Remove even numbers except 2
+            for (int i = 4; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Remove multiples of 3 except 3 itself
+            for (int i = 9; i &lt; sieve.size(); i += 6) {
+                sieve[i] = false;
+            }
+            // 0 and 1 are not prime
+            sieve[0] = sieve[1] = false;
+            // For each odd number less than sqrt(end) starting from 5 (2 and 3 are already done)...
+            for (int i = 5; i &lt;= sqrt(end); i += 2) {
+                // If i is prime
+                if (sieve[i]) {
+                    // Start from i^2 and remove all multiples of i (auto skipping even numbers)
+                    for (int j = pow&lt;int, int&gt;(i, 2); j &lt; sieve.size(); j += i * 2) {
+                        sieve[j] = false;
+                    }
+                }
+            }
+            // Add 2 as a prime (so we can skip all evens in the next loop)
+            primes.insert(primes.end(), 2);
+            // Add all primes (skipping even numbers, and 2 is already added) to the primes vector
+            for (int i = 3; i &lt; sieve.size(); i += 2) {
+                if (sieve[i]) {
+                    primes.insert(primes.end(), i);
+                }
+            }
+        } else {
+            // Segmented sieve
+            int count = end - start + 1;
+            // The sieve array (offset by start, meaning sieve[0] is the start and sieve.back() is the end)
+            vector&lt;bool&gt; sieve(count, true);
+            // Remove even numbers
+            for (int i = start % 2; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Calculate primes before sqrt(end)
+            vector&lt;int&gt; primes_until_sqrt = primes_in_range(0, sqrt(end), multithreaded);
+            // For all the primes except 2 (even numbers are already removed)...
+            for (int i = 1; i &lt; primes_until_sqrt.size(); i++) {
+                // Remove all the multiples of this prime
+                for (int j = max&lt;int&gt;(ceil(static_cast&lt;double&gt;(start) / primes_until_sqrt[i]), primes_until_sqrt[i]);
+                        j &lt;= end / primes_until_sqrt[i]; j++) {
+                    sieve[(primes_until_sqrt[i] * j) - start] = false;
+                }
+            }
+            // Add all the primes (auto skipping evens)
+            for (int i = !(start % 2); i &lt; sieve.size(); i += 2) {
+                if (sieve[i]) {
+                    primes.insert(primes.end(), i + start);
+                }
+            }
+        }
+    }
+    // Primes array now has all the primes from start and end
+    return primes;
+}
+
+// Part A
+int no_expo(int n)
+{
+    vector&lt;int&gt; nums;
+    // Generate at least N primes
+    vector&lt;int&gt; primes = primes_in_range(0, (log(n) + 1) * n, multithread_enable);
+    int smallest_prime = primes[0];
+    int next_smallest = primes[1];
+    // Multiply the smallest prime by its next smallest prime and then go to the next prime
+    for (int i = 0; i &lt; primes.size(); i++) {
+        // Until the result is bigger than the last prime
+        if (primes[i] * primes[i + 1] &gt; primes.back())
+            break;
+        for (int j = i + 1; j &lt; primes.size(); j++) {
+            if (primes[i] * primes[j] &lt; primes.back()) {
+                nums.insert(nums.end(), primes[i] * primes[j]);
+            } else
+                break;
+        }
+    }
+    // Insert the primes into the results
+    nums.insert(nums.end(), primes.begin(), primes.end());
+    // Sort them
+    sort(nums.begin(), nums.end());
+    return nums[n - 1];
+}
+
+// Part B
+int lot_expo(int n)
+{
+    int limit = pow(n, 2);
+    vector&lt;bool&gt; sieve(n + 1, true);
+    vector&lt;long int&gt; nums;
+    // Generate the power of numbers from 2-n that are smaller than limit
+    for (int i = 2; i &lt; sieve.size(); i++) {
+        if (sieve[i]) {
+            int expo = 2;
+            long int power = pow(i, expo);
+            while (power &lt;= limit) {
+                nums.insert(nums.end(), power);
+                if (power &lt;= n) {
+                    sieve[power] = false;
+                }
+                expo++;
+                power = pow(i, expo);
+            }
+        }
+    }
+    // 1 is also powerful
+    nums.insert(nums.end(), 1);
+    sort(nums.begin(), nums.end());
+    // Multiply the powers by other powers until the result is bigger than limit
+    for (int i = 1; i &lt; nums.size(); i++) {
+        if (nums[i] * nums[i + 1] &gt; limit) {
+            break;
+        } else {
+            for (int j = i + 1; j &lt; nums.size(); j++) {
+                long int res = nums[i] * nums[j];
+                if (res &gt; limit) {
+                    break;
+                } else if (find(nums.begin(), nums.end(), res) == nums.end()) {
+                    nums.insert(nums.end(), res);
+                }
+            }
+        }
+    }
+    // Sort them
+    sort(nums.begin(), nums.end());
+    return nums[n - 1];
+}
+
+int main(int argc, char* argv[])
+{
+    if (argc &gt; 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
+    int n;
+    cout &lt;&lt; "n ra vared konid: ";
+    cin &gt;&gt; n;
+    cout &lt;&lt; endl;
+    cout &lt;&lt; n &lt;&lt; "-omin adad bi tavan " &lt;&lt; no_expo(n) &lt;&lt; " mibashad" &lt;&lt; endl;
+    cout &lt;&lt; n &lt;&lt; "-omin adad por tavan " &lt;&lt; lot_expo(n) &lt;&lt; " mibashad" &lt;&lt; endl;
+    return 0;
+}</code>
+                    </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+        <h4 class="desc-sub-heading">بخش الف</h4>
+        <ul class="algo-list">
+            <li>
+                N عدد اول پیدا کن
+            </li>
+            <li>
+                برای پیدا کردن N عدد اول، میتوان تمام اعداد اول بین 0 و \(N \times \left(\log_e(N) + 1\right)\) را پیدا کرد. با این روش ما حداقل N عدد اول به دست می آوریم
+            </li>
+            <li>
+                کوچکترین عدد اول را در عدد بزرگتر بعدش ضرب می کنیم. جواب را در لیست جواب ها ذخیره میکنیم
+            </li>
+            <li>
+                سپس عدد دوم را به عدد اول بزرگتر بعدی تغییر میدهیم
+            </li>
+            <li>
+                این کار را تا زمانی که نتیجه از بزرگترین عدد اول، بزرگتر باشد انجام میدهیم
+            </li>
+            <li>
+                سپس عامل اول ضرب رو به عدد بزرگتر بعد از آن تغییر میدهیم و مراحل را تکرار میکنیم
+            </li>
+            <li>
+                زمانی که پس از تغییر عامل اول، اولین ضرب بزرگتر از بزرگترین عدد اول بود، توقف میکنیم
+            </li>
+            <li>
+                اعداد اول را به لیست جواب ها اضافه میکنیم
+            </li>
+            <li>
+                لیست را از کوچک به بزرگ مرتب می کنیم
+            </li>
+            <li>
+                N امین عضو لیست، جواب بخش الف است
+            </li>
+        </ul>
+        <h4 class="desc-sub-heading">بخش ب</h4>
+        <ul class="algo-list">
+            <li>
+                تمام اعداد از 2 تا N را در لیست اولیه ذخیره کن
+            </li>
+            <li>
+                نکته: لیست اولیه در کد به صورت یک آرایه صحیح و غلط نمایش داده شده است. صحیح بودن یک ایندکس در آرایه به منزله وجود آن ایندکس در لیست اعداد بوده وغلط بودن به منزله حذف شده بودن میباشد.
+            </li>
+            <li>
+                از اولین عدد در لیست شروع کن و توان دوم آن را در لیست جاب ها ذخیره کن
+            </li>
+            <li>
+                اگر که توان دوم در لیست اولیه بود، آن را حذف کن
+            </li>
+            <li>
+                این کار را برای تمام اعداد موجود در لیست اولیه انجام بده
+            </li>
+            <li>
+                در لیست جواب ها، هر عدد را در عدد بعدی بزرگتر از خودش ضرب کن تا جایی که جواب بزرگتر از \(N^2\) باشد
+            </li>
+            <li>
+                عدد ۱ را نیز به لیست جواب ها اضافه کن
+            </li>
+            <li>
+                جواب ها را از کوچک به بزرگ مرتب کن
+            </li>
+            <li>
+                N امین عضو لیست، جوا بخش ب است
+            </li>
+        </ul>
         </p>
     </section>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
