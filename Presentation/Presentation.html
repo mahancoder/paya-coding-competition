@@ -473,8 +473,8 @@ int main(int argc, char* argv[])
     return 0;
 }</code>
             </pre>
-        <h3 class="desc-heading">الگوریتم</h3>
         <p class="desc">
+        <h3 class="desc-heading">الگوریتم</h3>
         <ul class="algo-list">
             <li>
                 برای به دست آوردن میانگین درصد افزایش سالیانه کافی است از فرمول زیر استفاده کنیم:
@@ -687,7 +687,8 @@ int main(int argc, char* argv[])
                 N عدد اول پیدا کن
             </li>
             <li>
-                برای پیدا کردن N عدد اول، میتوان تمام اعداد اول بین 0 و \(N \times \left(\log_e(N) + 1\right)\) را پیدا کرد. با این روش ما حداقل N عدد اول به دست می آوریم
+                برای پیدا کردن N عدد اول، میتوان تمام اعداد اول بین 0 و \(N \times \left(\log_e(N) + 1\right)\) را پیدا
+                کرد. با این روش ما حداقل N عدد اول به دست می آوریم
             </li>
             <li>
                 کوچکترین عدد اول را در عدد بزرگتر بعدش ضرب می کنیم. جواب را در لیست جواب ها ذخیره میکنیم
@@ -720,7 +721,8 @@ int main(int argc, char* argv[])
                 تمام اعداد از 2 تا N را در لیست اولیه ذخیره کن
             </li>
             <li>
-                نکته: لیست اولیه در کد به صورت یک آرایه صحیح و غلط نمایش داده شده است. صحیح بودن یک ایندکس در آرایه به منزله وجود آن ایندکس در لیست اعداد بوده وغلط بودن به منزله حذف شده بودن میباشد.
+                نکته: لیست اولیه در کد به صورت یک آرایه صحیح و غلط نمایش داده شده است. صحیح بودن یک ایندکس در آرایه به
+                منزله وجود آن ایندکس در لیست اعداد بوده وغلط بودن به منزله حذف شده بودن میباشد.
             </li>
             <li>
                 از اولین عدد در لیست شروع کن و توان دوم آن را در لیست جاب ها ذخیره کن
@@ -742,6 +744,216 @@ int main(int argc, char* argv[])
             </li>
             <li>
                 N امین عضو لیست، جوا بخش ب است
+            </li>
+        </ul>
+        </p>
+    </section>
+    <section class="page page-6">
+        <h2 class="page-heading">سوال ۵:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;future&gt;
+#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;numeric&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+#include &lt;string.h&gt;
+
+using namespace std;
+
+const auto CORE_COUNT = std::thread::hardware_concurrency();
+
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded = true, bool count = false);
+
+// Returns all primes between start and end if count = false, else { count } of primes between start and end
+vector&lt;int&gt; primes_in_range(int start, int end, bool multithreaded, bool count)
+{
+    vector&lt;int&gt; primes;
+    // Do multi-threading if its worth it
+    if (multithreaded &amp;&amp; end - start &gt; 1000) {
+        int n = end - start + 1;
+        vector&lt;future&lt;vector&lt;int&gt;&gt;&gt; futures;
+        // Division size minimum is 100
+        int division_size = max&lt;int&gt;(100, n / CORE_COUNT);
+        // Start the different threads, calculating different divisions of primes
+        for (int s = start; s &lt;= end; s++) {
+            int e = min&lt;int&gt;(s + division_size, end);
+            if (s == start) {
+                futures.insert(futures.end(), async(primes_in_range, s, e + 1, false, count));
+            } else if (e == end) {
+
+                futures.insert(futures.end(), async(primes_in_range, s - 1, e, false, count));
+            } else {
+                futures.insert(futures.end(), async(primes_in_range, s - 1, e + 1, false, count));
+            }
+            s = e;
+        }
+        if (count) {
+            primes.insert(primes.end(), 0);
+        }
+        // Get the thread results and append them to the list of primes
+        for (auto&amp; f : futures) {
+            auto result = f.get();
+            if (count) {
+                primes[0] += result[0];
+            } else {
+                primes.insert(primes.end(), result.begin(), result.end());
+            }
+        }
+    } else {
+        // If we are doing classical sieve (starting from 0)
+        if (start &lt;= 2) {
+            // The sieve bool array
+            vector&lt;bool&gt; sieve(end + 1, true);
+            // Remove even numbers except 2
+            for (int i = 4; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Remove multiples of 3 except 3 itself
+            for (int i = 9; i &lt; sieve.size(); i += 6) {
+                sieve[i] = false;
+            }
+            // 0 and 1 are not prime
+            sieve[0] = sieve[1] = false;
+            // For each odd number less than sqrt(end) starting from 5 (2 and 3 are already done)...
+            for (int i = 5; i &lt;= sqrt(end); i += 2) {
+                // If i is prime
+                if (sieve[i]) {
+                    // Start from i^2 and remove all multiples of i (auto skipping even numbers)
+                    for (int j = pow&lt;int, int&gt;(i, 2); j &lt; sieve.size(); j += i * 2) {
+                        sieve[j] = false;
+                    }
+                }
+            }
+            if (count) {
+                primes.insert(primes.end(), accumulate(sieve.begin(), sieve.end() - 1, (start == 2) ? -1 : 0));
+            } else {
+                if (start &lt; 2) {
+                    primes.insert(primes.end(), 2);
+                }
+                // Add all primes (skipping even numbers, and 2 is already added) to the primes vector
+                for (int i = 3; i &lt; sieve.size() - 1; i += 2) {
+                    if (sieve[i]) {
+                        primes.insert(primes.end(), i);
+                    }
+                }
+            }
+        } else {
+            // Segmented sieve
+            int n = end - start + 1;
+            // The sieve array (offset by start, meaning sieve[0] is the start and sieve.back() is the end)
+            vector&lt;bool&gt; sieve(n, true);
+            // Remove even numbers
+            for (int i = start % 2; i &lt; sieve.size(); i += 2) {
+                sieve[i] = false;
+            }
+            // Calculate primes before sqrt(end)
+            vector&lt;int&gt; primes_until_sqrt = primes_in_range(0, sqrt(end) + 1, multithreaded);
+            // For all the primes except 2 (even numbers are already removed)...
+            for (int i = 1; i &lt; primes_until_sqrt.size(); i++) {
+                // Remove all the multiples of this prime
+                for (int j = max&lt;int&gt;(ceil(static_cast&lt;double&gt;(start) / primes_until_sqrt[i]), primes_until_sqrt[i]); j &lt;= end / primes_until_sqrt[i]; j++) {
+                    sieve[(primes_until_sqrt[i] * j) - start] = false;
+                }
+            }
+            if (count) {
+                primes.insert(primes.end(), accumulate(sieve.begin() + 1, sieve.end() - 1, 0));
+            } else {
+                // Add all the primes (auto skipping evens)
+                for (int i = (start % 2) + 1; i &lt; sieve.size() - 1; i += 2) {
+                    if (sieve[i]) {
+                        primes.insert(primes.end(), i + start);
+                    }
+                }
+            }
+        }
+    }
+    return primes;
+}
+int main(int argc, char* argv[])
+{
+    bool multithread_enable = true;
+    if (argc &gt; 1)
+    {
+        multithread_enable = strcmp(argv[1], "--no-thread") != 0;
+    }
+    int line_count;
+    cout &lt;&lt; "q ra vared konid: ";
+    cin &gt;&gt; line_count;
+    cout &lt;&lt; endl;
+    vector&lt;int&gt; counts(line_count);
+    vector&lt;vector&lt;int&gt;&gt; start_end_pairs(line_count);
+    // Ask for each line
+    for (int i = 1; i &lt;= line_count; i++) {
+        start_end_pairs[i - 1] = vector&lt;int&gt;(2);
+        cout &lt;&lt; "Khat " &lt;&lt; i &lt;&lt; " ra vared konid: ";
+        cin &gt;&gt; start_end_pairs[i - 1][0] &gt;&gt; start_end_pairs[i - 1][1];
+        cout &lt;&lt; endl;
+    }
+    // Calculate each line's primes
+    for (auto pair : start_end_pairs) {
+        cout &lt;&lt; "Tedad adad aval bein " &lt;&lt; pair[0] &lt;&lt; " va " &lt;&lt; pair[1] &lt;&lt; ": " &lt;&lt; primes_in_range(pair[0], pair[1], multithread_enable, true)[0] &lt;&lt; endl;
+    }
+    return 0;
+}</code>
+        </pre>
+        <p class="desc">
+        <h3 class="desc-heading">الگوریتم</h3>
+        <h4 class="desc-sub-heading">در صورتی که شروع از 0 باشد</h4>
+        <ul class="algo-list">
+            <li>
+                در صورتی که شروع از عدد کوچکتر یا مساوری دو باشد، ما از الگوریتم غربال اراتوستن استفاده میکنیم
+            </li>
+            <li>
+                در این الگوریتم، ابتدا پیش فرش خود را اینگونه در نظر میگیریم که همه اعداد از 2 تا N اول هستند
+            </li>
+            <li>
+                سپس از اولین عدد اول شروع کرده و مضارب آن را به عنوان مرکب علامت گذاری می کنیم
+            </li>
+            <li>
+                همین کار را برای تمام اعدادی که هنوز در لیست به عنوان اول علامت گذاری شده اند، انجام می دهیم
+            </li>
+            <li>
+                در انتها، اعدادی که هنوز اول هستند، همان اعداد اول بین 0 و N هستند
+            </li>
+
+            <li>
+                همچنین فقط لازم است مضارب اعداد اول کوچکتر از رادیکال N را حذف کنیم
+            </li>
+
+        </ul>
+        <h4 class="desc-sub-heading">در صورتی که شروع بزرگتر از 2 باشد</h4>
+        <ul class="algo-list">
+            <li>
+                برای پیدا کردن اعداد اول بین دو عدد با شروع بزرگتر از 2، باید الگوریتم غربال را کمی تغییر دهیم
+            </li>
+            <li>
+                اول با استفاده از الگوریتم عادی غربال، اعداد اول از 0 تا رادیکال نقطه پایان را پیدا میکنیم
+            </li>
+            <li>
+                سپس مضارب هر کدام از آن اعداد که در بازه انتخابی ما قرار دارد را حذف می کنیم
+            </li>
+        </ul>
+        <h4 class="desc-sub-heading">بهینه سازی های کلی</h4>
+        <ul class="algo-list">
+            <li>
+                برای بهینه سازی الگوریتم میتوان مضارب 2 و 3 را همان اول از لیست حذف کرد و سپس برای پیدا کردن اعداد اول
+                بعدی، شش تا شش تا بالا رفت
+            </li>
+            <li>
+                از آنجایی که لیست اعداد به صورت یک آرایه صحیح و غلط در کد تعریف شده است (صحیح به معنای اول و غلط به
+                معنای مرکب)، برای پیدا کردن تعداد فقط کافی است جمع اعضای آرایه را به دست آوریم، زیرا در تبدیل صحیح و غلط
+                به اعداد صحیح، صحیح تبدیل به یک شده و غلط تبدیل به صفر میشود
+            </li>
+            <li>
+                البته اگر خود اعداد مد نظر ما باشد (مثلا زمانی که الگوریتم تغییر داده شده اعداد اول تا رادیکال N را
+                میخواهد) ما باید اعضای لیست را چک کرده و ایندکس های صحیح را به لیست حواب ها اضافه کنیم
+            </li>
+            <li>
+                برای افزایش سرعت الگوریتم، کد جوری طراحی شده تا از تمام هسته های پردازنده شما به ضورت همزمان استفاده
+                کند. البته این کار برای اعداد کوچکتر تاثیر آنچنانی ندارد، به همین دلیل این ویژگی فقط زمانی فعال میشود که
+                بازه اعداد از 100 بزرگتر باشد
             </li>
         </ul>
         </p>
