@@ -1079,6 +1079,51 @@ int main(int argc, char* argv[])
             </li>
         </ul>
     </section>
+    <section class="page page-8">
+        <h2 class="page-heading">سوال ۷:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+    int numCount;
+
+    cout &lt;&lt; "Tedade adad ha ra vared konid: ";
+    cin &gt;&gt; numCount;
+
+    vector&lt;int&gt; numbers(numCount);
+
+    cout &lt;&lt; "Adad ha ra vared konid: ";
+
+    for (int i = 0; i &lt; numCount; i++) {
+        cin &gt;&gt; numbers[i];
+    }
+
+    sort(numbers.begin(), numbers.end());
+
+    cout &lt;&lt; "Adad haye moratab shode: " &lt;&lt; endl;
+
+    for (int num : numbers) {
+        cout &lt;&lt; num &lt;&lt; ' ';
+    }
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code>
+        </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <ul class="algo-list">
+            <li>
+                در این سوال از تابع sort در کتابخانه استاندارد ++C استفاده شده است. این تابع از الگوریتم IntroSort
+                استفاده میکند که ترکیبی از Quicksort, Insertion Sort و Heap Sort می باشد. این الگوریتم یکی از سریعترین و
+                بهینه ترین الگوریتم های مرتب کردن اعداد می باشد.
+            </li>
+        </ul>
+    </section>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
