@@ -958,6 +958,127 @@ int main(int argc, char* argv[])
         </ul>
         </p>
     </section>
+    <section class="page page-7">
+        <h2 class="page-heading">سوال ۶:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+using namespace std;
+
+const unordered_map&lt;string, int&gt; days = {
+    { "saturday", 0 },
+    { "sunday", 1 },
+    { "monday", 2 },
+    { "tuesday", 3 },
+    { "wednesday", 4 },
+    { "thursday", 5 },
+    { "friday", 6 }
+};
+const unordered_map&lt;int, int&gt; month_length = {
+    { 1, 31 },
+    { 2, 31 },
+    { 3, 31 },
+    { 4, 31 },
+    { 5, 31 },
+    { 6, 31 },
+    { 7, 30 },
+    { 8, 30 },
+    { 9, 30 },
+    { 10, 30 },
+    { 11, 30 },
+    { 12, 30 }
+};
+
+int main(int argc, char* argv[])
+{
+    string day;
+    int day_in_week;
+    int first_month;
+    int first_date;
+    int second_date;
+    int second_month;
+    cout &lt;&lt; "Rooz va tarikh ra vared konid: ";
+    cin &gt;&gt; first_date &gt;&gt; first_month &gt;&gt; day;
+    cout &lt;&lt; "Tarikh na maloom ra vared konid: ";
+    cin &gt;&gt; second_date &gt;&gt; second_month;
+    cout &lt;&lt; endl;
+    // Lowercase the day
+    transform(day.begin(), day.end(), day.begin(),
+        [](unsigned char c) { return tolower(c); });
+    try {
+        day_in_week = days.at(day);
+    } catch (const out_of_range&amp;) {
+        cout &lt;&lt; "Rooz na motabar!" &lt;&lt; endl;
+        return -1;
+    }
+    int days_past;
+
+    if (first_month == second_month) {
+        // If they are both in the same month
+        days_past = second_date - first_date;
+    } else if (second_month &gt; first_month) {
+        // If we are going forwards
+        days_past = (month_length.at(first_month) - first_date) + second_date;
+        for (int i = first_month + 1; i &lt; second_month; i++) {
+            days_past += month_length.at(i);
+        }
+    } else {
+        // If we are going backwards
+        days_past = -(month_length.at(second_month) - second_date + first_date);
+        for (int i = first_month - 1; i &gt; second_month; i--) {
+            days_past -= month_length.at(i);
+        }
+    }
+    // Calculate the new day in the week
+    int new_day_in_week = (7 + (day_in_week + (days_past % 7))) % 7;
+    string new_day;
+    // Find the new day's name
+    for (auto&amp; day : days) {
+        if (day.second == new_day_in_week) {
+            new_day = day.first;
+            break;
+        }
+    }
+    // Upper case first letter
+    new_day[0] = toupper(new_day[0]);
+    cout &lt;&lt; new_day &lt;&lt; endl;
+    return 0;
+}</code>
+        </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <ul class="algo-list">
+            <li>
+                برای حل سوال ابتدا باید حساب کنیم دو تاریخ چند روز با هم فاصله دارند
+            </li>
+            <li>
+                اگر که دو تاریخ در یک ماه باشند، فقط کافی است تاریخ دوم را منهای تاریخ اول کنیم
+            </li>
+            <li>
+                در غیر این صورت باید ابتدا تعداد روز های همه ماه های بین دو ماه تاریخ اول و دوم را حساب کنیم
+            </li>
+            <li>
+                سپس روز های باقی مانده به پایان ماه در تاریخ اول و روز هاگذشته از شروع ماه را در تاریخ دوم حساب کنیم
+            </li>
+            <li>
+                با جمع این دو میتوان تعداد روز های طی شده را به دست آورد
+            </li>
+            <li>
+                اگر که روز های طی شده منفی باشد، باید به عقب پیش برویم
+            </li>
+            <li>
+                سپس کافی است تا باقی مانده روز ها بر 7 را حساب کنیم و آن عدد را به شماره روز اول در هفته جمع کنیم
+            </li>
+            <li>
+                برای انجام محاسبه درست در حالت هایی مثل ترتیب برعکس (روز طی شده منفی) و یا دو روز در یک ماه، لازم است
+                تدابیر جزئی ای نیز لحاظ شود که در کد انجام شده
+            </li>
+        </ul>
+    </section>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
