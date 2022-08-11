@@ -27,9 +27,22 @@ h5 {
     font-size: 1em;
 }
 
+.subject {
+    color: red;
+}
+
+.subheading {
+    color: rgb(253, 65, 65);
+}
+
+.people {
+    color: rgb(66, 66, 255);
+}
+
 .page {
     padding: 0cm;
     direction: rtl;
+    page-break-after: always;
 }
 
 .page-heading {
@@ -53,21 +66,24 @@ code {
 .desc-heading {
     color: royalblue;
     margin-right: 40px;
+    page-break-after: avoid;
 }
 
 .algo-list {
     background-color: rgb(255, 236, 212);
     border-radius: 10px;
-    line-height: 3.7vh;
+    line-height: 3vh;
     margin-right: 20px;
     margin-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
+    page-break-before: avoid;
+    page-break-inside: auto;
 }
 .algo-list li {
     font-size: 1.2em;
-    margin-top: 3vh;
+    margin-top: 2.5vh;
 }
 .algo-list li:first-child {
     margin-top: 0px !important;
@@ -78,4 +94,15 @@ code {
 
 .algo-list li::marker {
     color:red;
+}
+
+.desc-sub-heading {
+    color: orange;
+    margin-right: 50px;
+    page-break-after: avoid;
+    margin-top: 0px;
+}
+
+.desc {
+    page-break-inside: avoid;
 }

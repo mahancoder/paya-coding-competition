@@ -15,14 +15,12 @@
     <section class="page page-1">
         <div class="center">
             <h3>به نام خدا</h3>
-            <h1>پاسخ سوالات لیگ علمی پایا</h1>
-            <h2>مرحله نهایی</h2>
-            <h3>سال تحصیلی ۱۴۰۰ - ۱۴۰۱</h3>
-            <h3>اعضای تیم: ماهان لامعی، علی آتش روز، امیرمحمد غضنفری، طاها تعصب</h3>
+            <h1 class="subject">پاسخ سوالات لیگ علمی پایا</h1>
+            <h2 class="subheading">مرحله نهایی</h2>
+            <h3 class="year">سال تحصیلی ۱۴۰۰ - ۱۴۰۱</h3>
+            <h3 class="people">اعضای تیم: ماهان لامعی، علی آتش روز، امیرمحمد غضنفری، طاها تعصب</h3>
         </div>
     </section>
-
-    <div style="page-break-after: always;"></div>
 
     <!-- Page 2 -->
     <section class="page page-2">
@@ -257,7 +255,8 @@ int main(int argc, char* argv[])
         <p class="desc">
         <ul class="algo-list">
             <li>
-                برای پیدا کردن N امین عدد دوبل اول، باید تقریبا \(N \times \log_{10}(N)\) عدد اول پیدا کنیم. همچنین برای پیدا کردن X
+                برای پیدا کردن N امین عدد دوبل اول، باید تقریبا \(N \times \log_{10}(N)\) عدد اول پیدا کنیم. همچنین برای
+                پیدا کردن X
                 عدد
                 اول، باید تمام اعداد اول از صفر تا تقریبا \((\log_e(X) + 1) \times X\) را پیدا کنیم.
             </li>
@@ -295,10 +294,164 @@ int main(int argc, char* argv[])
         </ul>
         </p>
     </section>
-    <div style="page-break-after: always;"></div>
     <section class="page page-3">
         <h2 class="page-heading">سوال ۲:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+// Part A
+int smallest_larger(int n)
+{
+    string num = to_string(n);
+    int a_index;
+    int b_index;
+    char largest = 0;
+    cout &lt;&lt; endl;
+    // Start reading the num from right to left
+    for (int i = num.size() - 1; i &gt;= 0; i--) {
+        // Find the largest digit
+        if (num[i] &gt; largest) {
+            largest = num[i];
+            // The first smaller digit than our largest
+        } else if (num[i] &lt; largest) {
+            a_index = i;
+            char smallest_b = 127;
+            // Find the smallest digit to the right of a, that is larger than a (mark it as b)
+            for (int j = i; j &lt; num.size(); j++) {
+                if (num[j] &gt; num[a_index] &amp;&amp; num[j] &lt; smallest_b) {
+                    smallest_b = num[j];
+                    b_index = j;
+                }
+            }
+            // Swap a and b values
+            char temp = num[a_index];
+            num[a_index] = num[b_index];
+            num[b_index] = temp;
+            // Sort digits to the right of b (but not b itself) (since we have swapped, b is now in the position of a)
+            sort(num.begin() + a_index + 1, num.end());
+            break;
+        }
+    }
+    // If the result is the same, it means it's impossible to do
+    int result = stoi(num);
+    if (result == n) {
+        return -1;
+    }
+    return result;
+}
+
+// Part B
+int largest_smaller(int n)
+{
+    string num = to_string(n);
+    int a_index;
+    int b_index;
+    char smallest = 127;
+    cout &lt;&lt; endl;
+    // Start reading the num from right to left
+    for (int i = num.size() - 1; i &gt;= 0; i--) {
+        // Find the smallest digit
+        if (num[i] &lt; smallest) {
+            smallest = num[i];
+            // the first larger digit than the our smallest
+        } else if (num[i] &gt; smallest) {
+            a_index = i;
+            char largest_b = 0;
+            // Find the largest digit to the right of a that is smaller than a (mark it as b)
+            for (int j = i; j &lt; num.size(); j++) {
+                if (num[j] &lt; num[a_index] &amp;&amp; num[j] &gt; largest_b) {
+                    largest_b = num[j];
+                    b_index = j;
+                }
+            }
+            // Swap the values of a and b
+            char temp = num[a_index];
+            num[a_index] = num[b_index];
+            num[b_index] = temp;
+            // Sort digits to the right of b in descending order (but not b iself) (since we have swapped, b is now in the position of a)
+            sort(num.begin() + a_index + 1, num.end(), greater&lt;&gt;());
+            break;
+        }
+    }
+    // If the result is the same, it means it's impossible
+    int result = stoi(num);
+    if (result == n) {
+        return -1;
+    }
+    return result;
+}
+
+int main(int argc, char* argv[])
+{
+    int input;
+    cout &lt;&lt; "Adad ra vared konid: ";
+    cin &gt;&gt; input;
+    int smallest = smallest_larger(input);
+    int largest = largest_smaller(input);
+    cout &lt;&lt; "A: " &lt;&lt; (smallest == -1 ? "impossible" : to_string(smallest)) &lt;&lt; endl;
+    cout &lt;&lt; "B: " &lt;&lt; (largest == -1 ? "impossible" : to_string(largest)) &lt;&lt; endl;
+    return 0;
+}</code>
+        </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+        <h4 class="desc-sub-heading">بخش الف:</h4>
+        <ul class="algo-list">
+            <li>
+                شروع به خواندن ارقام از راست به چپ کن
+            </li>
+            <li>
+                بزگترین رقمی که تا الان دیده شده را با یاد داشته باش
+            </li>
+            <li>
+                اگر این رقم از بزرگترین رقم تا به حال دیده شده، کوچکتر بود، آن را به عنوان \(a\) علامت گذاری کن
+            </li>
+            <li>
+                کوچکترین رقم سمت راست \(a\) که از خود \(a\) بزرگتر است را پیدا کن و آن را به عنوان \(b\) علامت گذاری کن
+            </li>
+            <li>
+                جای \(a\) و \(b\) را عوض کن
+            </li>
+            <li>
+                ارقام سمت راست \(b\) را از کوچکتر به بزرگتر مرتب کن
+            </li>
+            <li>
+                اگر عدد به دست آمده با عدد اولیه فرقی نداشت، عمل غیر ممکن است
+            </li>
+        </ul>
+        <div style="page-break-after: always;"></div>
+        <h4 class="desc-sub-heading">بخش ب:</h4>
+        <ul class="algo-list">
+            <li>
+                شروع به خواندن ارقام از راست به چپ کن
+            </li>
+            <li>
+                کوچکترین رقمی که تا الان دیده شده را با یاد داشته باش
+            </li>
+            <li>
+                اگر این رقم از کوچکترین رقم تا به حال دیده شده، بزرگتر بود، آن را به عنوان \(a\) علامت گذاری کن
+            </li>
+            <li>
+                بزرگترین رقم سمت راست \(a\) که از خود \(a\) کوچکتر است را پیدا کن و آن را به عنوان \(b\) علامت گذاری کن
+            </li>
+            <li>
+                جای \(a\) و \(b\) را عوض کن
+            </li>
+            <li>
+                ارقام سمت راست \(b\) را از بزرگتر به کوچکتر مرتب کن
+            </li>
+            <li>
+                اگر عدد به دست آمده با عدد اولیه فرقی نداشت، عمل غیر ممکن است
+            </li>
+        </ul>
+        </p>
     </section>
+    <div style="page-break-after: always;"></div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
