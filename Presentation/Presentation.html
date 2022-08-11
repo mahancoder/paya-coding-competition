@@ -898,8 +898,8 @@ int main(int argc, char* argv[])
     return 0;
 }</code>
         </pre>
-        <p class="desc">
         <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
         <h4 class="desc-sub-heading">در صورتی که شروع از 0 باشد</h4>
         <ul class="algo-list">
             <li>
@@ -1051,6 +1051,7 @@ int main(int argc, char* argv[])
 }</code>
         </pre>
         <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
         <ul class="algo-list">
             <li>
                 برای حل سوال ابتدا باید حساب کنیم دو تاریخ چند روز با هم فاصله دارند
@@ -1078,6 +1079,7 @@ int main(int argc, char* argv[])
                 تدابیر جزئی ای نیز لحاظ شود که در کد انجام شده
             </li>
         </ul>
+        </p>
     </section>
     <section class="page page-8">
         <h2 class="page-heading">سوال ۷:</h2>
@@ -1116,6 +1118,7 @@ int main(int argc, char* argv[])
 }</code>
         </pre>
         <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
         <ul class="algo-list">
             <li>
                 در این سوال از تابع sort در کتابخانه استاندارد ++C استفاده شده است. این تابع از الگوریتم IntroSort
@@ -1123,6 +1126,7 @@ int main(int argc, char* argv[])
                 بهینه ترین الگوریتم های مرتب کردن اعداد می باشد.
             </li>
         </ul>
+        </p>
     </section>
     <section class="page page-9">
         <h2 class="page-heading">سوال ۸:</h2>
@@ -1171,6 +1175,7 @@ int main(int argc, char* argv[])
 }</code>
         </pre>
         <h3 class="desc-heading">الگوریتم</h3>
+        <p>
         <ul class="algo-list">
             <li>
                 ابتدا باید پیدا کنیم که N امین رقم در دهه اعداد چند رقمی است
@@ -1193,6 +1198,102 @@ int main(int argc, char* argv[])
                 \[\lfloor\frac{num}{10^{decade - \left(\left(nth\_digit\_in\_decade - 1\right) \mod decade\right) - 1}} \mod 10\rfloor\]
             </li>
         </ul>
+        </p>
+    </section>
+    <section class="page page-10">
+        <h2 class="page-heading">سوال ۹:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+    int degree;
+    vector&lt;int&gt; coefficients;
+    cout &lt;&lt; "Daraje ra vared konid: ";
+    cin &gt;&gt; degree;
+    cout &lt;&lt; endl &lt;&lt; "Zarib ha ra vared konid: ";
+    for (int i = 0; i &lt;= degree ; i++) {
+        int c = 0;
+        cin &gt;&gt; c;
+        coefficients.push_back(c);
+    }
+    cout &lt;&lt; endl;
+    // Find all the roots (non-negative integers less than 11)
+    vector&lt;int&gt; roots;
+    for (int i = 0; i &lt; 11; i++) {
+        int result = 0;
+        for (int j = degree; j &gt;= 0 ; j--) {
+            result += coefficients[degree - j] * pow(i, j);
+        }
+        if (result == 0)
+        {
+            roots.push_back(i);
+        }
+    }
+    // Build the polynomial
+    string poly("");
+    if (coefficients[0] &gt; 1)
+    {
+        poly += to_string(coefficients[0]) + " * "; 
+    }
+    for(int root : roots)
+    {
+        poly += ("(x - " + to_string(root) + ") * ");
+    }
+    // Replace (x - 0) with just x
+    if (poly.find("(x - 0)") != string::npos)
+    {
+        poly.replace(poly.find("(x - 0)"), 7, "x");
+    }
+    // Remove the last " * "
+    poly = poly.substr(0, poly.size() - 3);
+    cout &lt;&lt; "Tajzie: " &lt;&lt; poly &lt;&lt; endl;
+    return 0;
+}</code>
+        </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+            <ul class="algo-list">
+                <li>
+                    برای تجزیه یک چند جمله ای با ریشه های مشخص، میتوان از قضیه فاکتور (Factor Theorem) استفاده کرد.
+                </li>
+                <li>
+                    بر اساس این قضیه، به ازای هر ریشه \(a\) در ریشه های یک چند جلمه ای، \((x - a)\) یکی از فاکتور های آن چند جمله ای است.
+                </li>
+                <li>
+                    از آنجایی که تضمین شده تمام ریشه ها اعداد صحیح هستند، لازم نیست نگران چند جمله ای هایی با ریشه های موهومی باشیم
+                </li>
+                <li>
+                    همچنین چون تمام ریشه ها غیر تکراری هستند، چند جمله ای های مربع کامل هم وجود ندارند.
+                </li>
+                <li>
+                    برای استفاده از قضیه فاکتور ابتدا باید ریشه ها را پیدا کرد
+                </li>
+                <li>
+                    چون در این سوال تضمین شده ریشه ها فقط اعداد 0-10 باشند، میتوان با یک آزمون خطای ساده تمام ریشه های چند جمله ای را پیدا کرد
+                </li>
+                <li>
+                    سپس با استفاده از قضیه فاکتور، تجزیه چند جمله ای را می سازیم
+                </li>
+                <li>
+                    در قضیه فاکتور، ضریب های ثابت پیدا نمی شوند، اما چون ریشه های چند جمله ای ما همگی اعداد صحیح هستند، تنها ضریب ثابت، ضریب بزرگترین درجه چند جمله ای است
+                </li>
+                <li>
+                    بنابراین اگر این ضریب بزرگتر از 1 بود، آن را به حاصل قضیه فاکتور اضافه میکنیم
+                </li>
+            </ul>
+        </p>
+    </section>
+    <section class="page page-11">
+        <h2 class="page-heading">سوال ۱۰:</h2>
+        <pre>
+            <code class="language-cpp"></code>
+        </pre>
     </section>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
