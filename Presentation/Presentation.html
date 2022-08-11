@@ -1202,8 +1202,9 @@ int main(int argc, char* argv[])
                 سپس برای محاسبه رقم با استفاده از اطلاعات به دست آمده، از فرمول زیر استفاده می کنیم. در اینجا decade
                 همان شماره دهه، nth_digit_in_decade یعنی چندمین رقم از شروع دهه، و num همان عدد محاسبه شده در مرحله قبل
                 است:
-                \[\lfloor\frac{num}{10^{decade - \left(\left(nth\_digit\_in\_decade - 1\right) \mod decade\right) - 1}}
-                \mod 10\rfloor\]
+                \[\left\lfloor\frac{num}{10^{decade - \left(\left(nth\_digit\_in\_decade - 1\right) \mod decade\right) -
+                1}}
+                \mod 10\right\rfloor\]
             </li>
         </ul>
         </p>
@@ -1374,7 +1375,8 @@ int main(int argc, char* argv[])
                 \[\left(k + n\right)! \over k! \times n!\]
             </li>
             <li>
-                چون که صورت کسر همیشه بزرگتر از مخرج کسر می باشد، می شود فاکتوریل ها را ساده کرد. برای مثال اگر \(n = 4\) و \(k = 6\):
+                چون که صورت کسر همیشه بزرگتر از مخرج کسر می باشد، می شود فاکتوریل ها را ساده کرد. برای مثال اگر \(n =
+                4\) و \(k = 6\):
                 \[10! \over 6! \times 4!\]
             </li>
             <li>
@@ -1383,7 +1385,86 @@ int main(int argc, char* argv[])
                 که از لحاظ محاسباتی سریعتر و ساده تر است
             </li>
             <li>
-                پس در کد فقط لازم است عدد بزرگتر در مخرج را پیدا کرده و آن را با صورت ساده کنیم، و سپس با محاسبه به جواب برسیم
+                پس در کد فقط لازم است عدد بزرگتر در مخرج را پیدا کرده و آن را با صورت ساده کنیم، و سپس با محاسبه به جواب
+                برسیم
+            </li>
+        </ul>
+        </p>
+    </section>
+    <section class="page page-12">
+        <h2 class="page-heading">سوال ۱۱:</h2>
+        <pre>
+            <code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+// 2^n digits repeat every 4 times
+const int two_cyclic_digits[] = { 2, 4, 8, 6 };
+// Get the last digit of 2^n
+inline int unit_digit_of_2_expo(int expo)
+{
+    return two_cyclic_digits[(expo - 1) % 4];
+}
+
+// Factorial of 0-4
+const int fact_map[] = { 1, 1, 2, 6, 24 };
+
+int unit_digit_fact(int n)
+{
+    // the floor of 1/5th of n
+    int n_5th_floor = floor(n / 5);
+    // If n is small...
+    if (n_5th_floor &lt; 5) {
+        // Run the formula on it directly
+        return (fact_map[n_5th_floor] * unit_digit_of_2_expo(n_5th_floor) * fact_map[n % 5]) % 10;
+    } else {
+        // Otherwise make it small
+        // This variable stores the digits in the process of making it small
+        int others = 1;
+        while (n_5th_floor &gt; 4) {
+            others = (unit_digit_of_2_expo(n_5th_floor) * fact_map[n % 5] * others) % 10;
+            n = n_5th_floor;
+            n_5th_floor = floor(n_5th_floor / 5);
+        }
+        // Run the formula
+        return (fact_map[n_5th_floor] * unit_digit_of_2_expo(n_5th_floor) * fact_map[n % 5] * others) % 10;
+    }
+}
+int main(int argc, char* argv[])
+{
+    int n = 0;
+    cout &lt;&lt; "n ra vared konid: ";
+    cin &gt;&gt; n;
+    cout &lt;&lt; endl;
+    cout &lt;&lt; unit_digit_fact(n) &lt;&lt; " avalin ragham na sefr dar " &lt;&lt; n &lt;&lt; "! mibashad"  &lt;&lt; endl;
+    return 0;
+}</code>
+        </pre>
+        <h3 class="desc-heading">الگوریتم</h3>
+        <p class="desc">
+        <ul class="algo-list">
+            <li>
+                اگر که یک پنجم از N کوچکتر از 5 بود، با فرمول زیر اولین رقم غیر صفر در آن را محاسبه میکنیم:
+                \[unit\_digit(n!) = {\left\lfloor {\frac{n}{5}} \right\rfloor !} \times 2^{\left\lfloor {\frac{n}{5}}
+                \right\rfloor} \times \left(n \mod 5 \right)!\]
+            </li>
+            <li>
+                در غیر این صورت، حاصل های قبلی را در \(2^{\left\lfloor\frac{n}{5}\right\rfloor} \times \left(n \mod 5
+                \right)!\) ضرب کرده و n را تقسیم برپنج میکنیم
+            </li>
+            <li>
+                این کار را اینقدر تکرار کرده تا \(n / 5\) کوچکتر از 5 شود
+            </li>
+            <li>
+                سپس، حاصل برابر است با اولین رقم در (results همان حاصل های قبلی در مراحل قبل است):
+                \[\left(\left\lfloor n \over 5 \right\rfloor\right)! \times 2^{\left\lfloor n \over 5 \right\rfloor}
+                \times \left(n \mod 5 \right)! \times results\]
+            </li>
+            <li>
+                نکته: چون فقط ارقام اول مد نظر ماست، در محاسبات توان های دو فقط لازم است رقم اول را محاسبه کنیم، و از
+                آنجایی که ارقام توان های دو یک چرخه چهار تایی دارند، به راحتی قابل انجام است
             </li>
         </ul>
         </p>
