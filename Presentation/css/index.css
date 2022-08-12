@@ -28,15 +28,19 @@ h5 {
 }
 
 .subject {
-    color: red;
+    color: rgb(0, 0, 0);
 }
 
 .subheading {
-    color: rgb(253, 65, 65);
+    color: rgb(0, 0, 0);
+}
+
+.year {
+    color: rgb(0, 0, 0);
 }
 
 .people {
-    color: rgb(66, 66, 255);
+    color: rgb(0, 0, 0);
 }
 
 .page {
@@ -46,7 +50,9 @@ h5 {
 }
 
 .page-heading {
-    color: rgb(253, 43, 43);
+    color: rgb(0, 0, 0);
+    margin-right: 40px;
+    page-break-after: avoid;
 }
 
 pre {
@@ -69,7 +75,7 @@ code {
 }
 
 .desc-heading {
-    color: royalblue;
+    color: rgb(0, 0, 0);
     margin-right: 40px;
     page-break-after: avoid;
 }
@@ -98,11 +104,11 @@ code {
 }
 
 .algo-list li::marker {
-    color:red;
+    color:rgba(17, 17, 17, 0.767);
 }
 
 .desc-sub-heading {
-    color: orange;
+    color: rgb(0, 0, 0);
     margin-right: 50px;
     page-break-after: avoid;
     margin-top: 0px;
