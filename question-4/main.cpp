@@ -134,7 +134,7 @@ int no_expo(int n)
 // Part B
 int lot_expo(int n)
 {
-    int limit = pow(n, 2);
+    long double limit = pow(n, 2);
     vector<bool> sieve(n + 1, true);
     vector<long int> nums;
     // Generate the power of numbers from 2-n that are smaller than limit
