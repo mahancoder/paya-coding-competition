@@ -1,10 +1,14 @@
 @font-face {
-
+    font-family: "BNazanin";
+    src: url("../fonts/B-NAZANIN/b-nazanin-webfont.woff2") format("woff2"),
+    url("../fonts/B-NAZANIN/b-nazanin-webfont.woff") format("woff"),
+    url("../fonts/B-NAZANIN/B-NAZANIN.TTF") format("truetype");
 }
 
 html {
     direction: rtl;
     margin: 10px;
+    font-family: "Noto Sans", "BNazanin", sans-serif;
 }
 
 .center {
