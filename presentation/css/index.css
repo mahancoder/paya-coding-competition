@@ -125,3 +125,26 @@ code {
 .desc {
     page-break-inside: avoid;
 }
+
+.demo {
+    padding-right: 10px;
+    text-align: left;
+    page-break-inside: auto;
+}
+
+.demo img {
+    display: block;
+    page-break-inside: avoid;
+    page-break-before: auto;
+    page-break-after: auto;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.demo-heading {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: right;
+    display: inline-block;
+    page-break-after: avoid;
+    page-break-before: auto;
+}
