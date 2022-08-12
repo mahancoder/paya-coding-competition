@@ -1,5 +1,5 @@
 # Paya Computer Science Competition
-Answers for Paya League Comp Sci final round (2022 - 1401)
+Answers for Paya League Comp Sci final round (1400 - 1401)
 
 ## Usage
 First, build the apps from source, and then run your desired executable in a question's directory.
