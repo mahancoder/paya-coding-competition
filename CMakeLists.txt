@@ -16,6 +16,10 @@ set(QUESTION_11 question-11/main.cpp)
 set(QUESTION_6 question-6/main.cpp)
 set(QUESTION_9 question-9/main.cpp)
 
+# Find packages
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 # Add executable targets for each question's solution
 add_executable(question-1 ${QUESTION_1})
 add_executable(question-1-simple ${QUESTION_1_SIMPLE})
@@ -29,9 +33,6 @@ add_executable(question-4 ${QUESTION_4})
 add_executable(question-11 ${QUESTION_11})
 add_executable(question-6 ${QUESTION_6})
 add_executable(question-9 ${QUESTION_9})
-
-# Find packages
-find_package(Threads REQUIRED)
 
 # Link libraries
 target_link_libraries(question-1 Threads::Threads)
