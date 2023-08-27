@@ -10,6 +10,9 @@ To build from source, run build.sh:
 ./build.sh
 ```
 
+## Answers
+To view the presentation online, visit [this](https://mahancoder.github.io/paya-coding-competition/presentation/html/) page.
+
 ## File structure
 You can find competition's questions PDF source in **exam-questions.pdf**
 
